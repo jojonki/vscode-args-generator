@@ -4,50 +4,96 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         crossorigin="anonymous"></script>
-
-    <script>
-        document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=2"></' + 'script>')
-    </script>
-    <script src="main.js"> </script>
+    <link rel="stylesheet" href="main.css">
 </head>
 
-<body onload="init(); update();">
+<body>
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex align-items-center">
-                    <strong>Visual Studio Code args geenrator for launch.json</strong>
+                    <strong>VS Code args Generator</strong>
                 </a>
-                <li><a href="https://github.dev/jojonki/vscode-args-generator" class="text-white">Go back to GitHub</a>
+                <li><a href="https://github.com/jojonki/vscode-args-generator" class="text-white">Go back to GitHub</a>
             </div>
         </div>
     </header>
 
-    <div id="layers"></div>
+    <!-- <div id="layers"></div> -->
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- <h2>hoge</h2>
+                hoggegaea -->
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Paste your command</h4>
+                    <p>
+                        Generate an argument list in json format for Visual Studio Code's `launch.json`.
+                    </p>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
 
     <div class="container">
-        <hr>
         <div class="row">
             <div class="col">
-                <label class="form-label">Command</label>
-                <input class="form-control" id="textInputSize" value="python a.py b c d e">
+                <label>Command</label>
+                <textarea class="form-control" id="commandTextArea" onkeydown="commandKeyDown();" onfocusout="apply();" rows="4" placeholder="Paste your command here.">python train.py --path exp/bert --data wikipedia --train.batch_size 32 --n_epochs 100 aaaaaaa bbb</textarea>
+                <hr>
+                <!-- <label class="form-label">Args</label> -->
+                <pre id="textArgs"></pre>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <label class="form-label">Args</label>
-                <input class="form-control" id="textArgs">
-            </div>
-        </div>
-       
+
     </div>
 
     <script>
-        alert("HOGE")
+        // https://stackoverflow.com/questions/4810841/pretty-print-json-using-javascript
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            })
+        }
+        function output(inp) {
+            document.getElementById("textArgs").innerHTML = inp;
+        }
+
+        function apply() {
+            var cmd = document.getElementById("commandTextArea").value.split(' ').map(item=>item.trim());
+            cmd = cmd.filter(function (el) {
+                return el != "";
+            });
+            cmd = cmd.slice(2)
+            var args = JSON.stringify({ "args": cmd }, undefined, 4);
+            output(syntaxHighlight(args));
+        }
+
+        function commandKeyDown() {
+            console.log(event.key)
+            // if (event.key === 'Enter') {
+            apply();
+            // }
+        }
+
+        apply();
     </script>
 </body>
 
