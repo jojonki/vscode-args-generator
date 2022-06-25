@@ -21,12 +21,9 @@
         </div>
     </header>
 
-    <!-- <div id="layers"></div> -->
     <div class="container">
         <div class="row">
             <div class="col">
-                <!-- <h2>hoge</h2>
-                hoggegaea -->
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">Paste your command</h4>
                     <p>
@@ -45,7 +42,6 @@
                 <label>Command</label>
                 <textarea class="form-control" id="commandTextArea" onkeydown="commandKeyDown();" onfocusout="apply();" rows="4" placeholder="Paste your command here.">python train.py --path exp/bert --data wikipedia --train.batch_size 32 --n_epochs 100</textarea>
                 <hr>
-                <!-- <label class="form-label">Args</label> -->
                 <pre id="textArgs"></pre>
             </div>
         </div>
@@ -72,6 +68,7 @@
                 return '<span class="' + cls + '">' + match + '</span>';
             })
         }
+
         function output(inp) {
             document.getElementById("textArgs").innerHTML = inp;
         }
@@ -87,10 +84,7 @@
         }
 
         function commandKeyDown() {
-            console.log(event.key)
-            // if (event.key === 'Enter') {
             apply();
-            // }
         }
 
         apply();
