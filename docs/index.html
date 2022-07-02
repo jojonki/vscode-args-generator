@@ -74,7 +74,7 @@
         }
 
         function apply() {
-            var cmd = document.getElementById("commandTextArea").value.split(' ').map(item=>item.trim());
+            var cmd = document.getElementById("commandTextArea").value.replaceAll("\n", "").replaceAll("\\", "").split(" ").map(item=>item.trim());
             cmd = cmd.filter(function (el) {
                 return el != "";
             });
